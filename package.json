@@ -1,6 +1,6 @@
 {
     "name": "@dougskinner/markdowner",
-    "version": "0.3.6",
+    "version": "0.5.0",
     "description": "A simple command line tool to download a website as markdown",
     "main": "index.js",
     "scripts": {
@@ -14,16 +14,21 @@
     "bin": {
         "markdowner": "src/index.js"
     },
+    "engines": {
+        "node": ">=18"
+    },
     "devDependencies": {
-        "eslint": "^7.2.0"
+        "eslint": "^8.57.1"
     },
     "dependencies": {
-        "axios": "^0.21.1",
-        "clipboardy": "^2.3.0",
-        "commander": "^5.1.0",
-        "turndown": "^6.0.0",
+        "@mozilla/readability": "^0.6.0",
+        "axios": "^1.18.1",
+        "clipboardy": "^4.0.0",
+        "commander": "^13.1.0",
+        "jsdom": "^26.1.0",
+        "turndown": "^7.2.4",
         "turndown-plugin-gfm": "^1.0.2",
-        "winston": "^3.2.1"
+        "winston": "^3.17.0"
     },
     "keywords": [],
     "author": "Doug Skinner <dskinne12@gmail.com>",
