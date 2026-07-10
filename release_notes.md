@@ -1,5 +1,14 @@
 # Release Notes
 
+## V0.5.0
+
+Modernized extraction for article-style pages:
+
+- Substack API support (including custom domains like The Bulwark)
+- Mozilla Readability fallback for other sites
+- Updated dependencies and browser-like request headers
+- Sample outputs in `samples/`
+
 ## V0.3.3
 
 Fixed a bug where the markdown was still being output to the console even if you passed in the clipboard flag.

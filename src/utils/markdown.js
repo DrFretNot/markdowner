@@ -44,6 +44,27 @@ turndown.addRule('substackImages', {
 	}
 })
 
+turndown.addRule('substackCaptions', {
+	filter: (node) => node.classList?.contains('captioned-image-container'),
+	replacement: (_content, node) => {
+		const image = node.querySelector('img')
+		const caption = node.querySelector('figcaption')?.textContent?.trim()
+
+		if (!image) {
+			return _content
+		}
+
+		const alt = image.getAttribute('alt') || caption || ''
+		const src = image.getAttribute('src') || image.getAttribute('data-src') || ''
+		if (!src) {
+			return ''
+		}
+
+		const imageMarkdown = `![${alt}](${src})`
+		return caption ? `\n\n${imageMarkdown}\n\n*${caption}*\n\n` : `\n\n${imageMarkdown}\n\n`
+	}
+})
+
 const htmlToMarkdown = (html) => turndown.turndown(html)
 
 const formatDate = (dateValue) => {

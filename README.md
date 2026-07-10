@@ -1,30 +1,71 @@
 # Markdowner
 
-A simple command line tool that allows you to download a website as markdown.
+A command-line tool that downloads a web page and converts it to Markdown.
+
+Markdowner is optimized for article-style pages, including Substack newsletters (The Bulwark, Astral Codex Ten, and custom domains), blogs, and news sites.
 
 ## Quick Start
 
-Getting up and running with this tool is very easy. To install the tool and us it to download a specific website and print it out to the console, you can run the following:
+Install dependencies and run locally:
+
+```bash
+npm install
+node src/index.js -u https://www.thebulwark.com/p/a-season-of-death-and-fear-immigration-mass-deportation-springfield-haitians-texas-ice
+```
+
+Or install globally:
 
 ```bash
 npm i -g @dougskinner/markdowner
-markdowner -u https://google.com
+markdowner -u https://example.com
 ```
 
-## API Documentation
+Requires Node.js 18 or later.
 
-### Commandline flags
+## How It Works
 
-The following are a list of all flags that can or must be passed into the application.
+Markdowner uses a tiered extraction pipeline:
 
-| Long Flag   | Short Flag | Mandatory | Description                                                                                                          |
-|-------------|------------|-----------|----------------------------------------------------------------------------------------------------------------------|
-| --url <url> | -u <url>   | Yes       | The url of the website that should be converted into markdown.                                                       |
-| --debug     | -d         | No        | Used if you want the application to print extra information. This shouldn't need to be used in normal circumstances. |
-| --clipboard | -c         | No        | Passes the markdown from the downloaded website into the system clipboard rather than standard out.                  |
+1. **Substack API** — For URLs matching `/p/{slug}` (including custom domains like `thebulwark.com`), fetches clean article HTML from `{origin}/api/v1/posts/{slug}`.
+2. **Mozilla Readability** — For other sites, extracts the main article content and strips navigation chrome.
+3. **Full-page fallback** — If Readability cannot find an article, converts the full HTML page.
 
-## How to contribute
+Output includes the article title, subtitle (when available), author/byline, publication date, and body content.
 
-There are many ways that this repository can be contributed to! The easiest way is to [submit issues](https://github.com/doug-skinner/markdowner/issues) to this repository noting bugs that it may have.
+## Command-Line Flags
 
-Another way to help work on this repository is to comment on one of the already existing issues and start working on it. If there's something that sounds good to be implemented, but there just hasn't been time for me to do it yet, feel free to start working on it. I would just ask that you tag me in a comment first, to make sure those no duplication of effort going on.
+| Long Flag   | Short Flag | Required | Description |
+|-------------|------------|----------|-------------|
+| `--url <url>` | `-u <url>` | Yes | The URL to convert to Markdown. |
+| `--debug`   | `-d`       | No       | Print extra diagnostic information. |
+| `--clipboard` | `-c`     | No       | Copy Markdown to the system clipboard instead of stdout. |
+
+## Samples
+
+Example output lives in [`samples/`](samples/). These are real articles from [The Bulwark](https://www.thebulwark.com/) used as regression fixtures.
+
+Regenerate them after changing extraction logic:
+
+```bash
+npm run samples
+```
+
+## Development
+
+```bash
+npm install
+npm run lint
+npm run samples
+```
+
+## Limitations
+
+- **Paywalled content** — Substack paywalls may return truncated or empty article bodies.
+- **JavaScript-rendered pages** — SPAs without server-rendered HTML may not convert well (no headless browser).
+- **Bot blocking** — Some sites may return 403 or challenge pages.
+
+## How to Contribute
+
+The easiest way to help is to [submit issues](https://github.com/doug-skinner/markdowner/issues) noting bugs or sites that do not convert well.
+
+If you want to work on an existing issue, comment on it first to avoid duplicate effort.
